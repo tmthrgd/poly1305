@@ -21,3 +21,8 @@ func Sum(out *[TagSize]byte, m []byte, key *[KeySize]byte) {
 func Verify(mac *[TagSize]byte, m []byte, key *[KeySize]byte) bool {
 	return ref.Verify(mac, m, key)
 }
+
+// New returns a new Poly1305 hash using the given key.
+func New(key []byte) (hash.Hash, error) {
+	return newRef(key)
+}

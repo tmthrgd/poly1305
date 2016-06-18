@@ -29,6 +29,20 @@ func benchmarkSum(b *testing.B, sum func(mac *[TagSize]byte, m []byte, key *[Key
 	}
 }
 
+func benchmarkHash(b *testing.B, h hash.Hash) {
+	b.SetBytes(benchSize)
+
+	m := make([]byte, benchSize)
+	tag := make([]byte, 0, h.Size())
+
+	for i := 0; i < b.N; i++ {
+		h.Reset()
+
+		h.Write(m)
+		h.Sum(tag)
+	}
+}
+
 func BenchmarkXCryptoSum(b *testing.B) {
 	benchmarkSum(b, ref.Sum)
 }
@@ -37,30 +51,33 @@ func BenchmarkSum(b *testing.B) {
 	benchmarkSum(b, Sum)
 }
 
-func benchmarkHMAC(b *testing.B, h func() hash.Hash) {
-	b.SetBytes(benchSize)
-
+func BenchmarkNew(b *testing.B) {
 	var key [KeySize]byte
-	mac := hmac.New(h, key[:])
-	m := make([]byte, benchSize)
-	tag := make([]byte, mac.Size())
-
-	for i := 0; i < b.N; i++ {
-		mac.Reset()
-
-		mac.Write(m)
-		mac.Sum(tag)
+	h, err := New(key[:])
+	if err != nil {
+		b.Fatal(err)
 	}
+
+	benchmarkHash(b, h)
 }
 
 func BenchmarkHMACMD5(b *testing.B) {
-	benchmarkHMAC(b, md5.New)
+	var key [KeySize]byte
+	h := hmac.New(md5.New, key[:])
+
+	benchmarkHash(b, h)
 }
 
 func BenchmarkHMACSHA1(b *testing.B) {
-	benchmarkHMAC(b, sha1.New)
+	var key [KeySize]byte
+	h := hmac.New(sha1.New, key[:])
+
+	benchmarkHash(b, h)
 }
 
 func BenchmarkHMACSHA256(b *testing.B) {
-	benchmarkHMAC(b, sha256.New)
+	var key [KeySize]byte
+	h := hmac.New(sha256.New, key[:])
+
+	benchmarkHash(b, h)
 }

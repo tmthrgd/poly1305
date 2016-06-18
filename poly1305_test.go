@@ -102,3 +102,34 @@ func TestEqual(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestEqualSumNew(t *testing.T) {
+	t.Parallel()
+
+	if err := quick.CheckEqual(func(key *[KeySize]byte, m []byte) []byte {
+		var tag [TagSize]byte
+		Sum(&tag, m, key)
+		return tag[:]
+	}, func(key *[KeySize]byte, m []byte) []byte {
+		hash, err := New(key[:])
+		if err != nil {
+			panic(err)
+		}
+
+		hash.Write(m[:1])
+		hash.Write(m[1:])
+		return hash.Sum(nil)
+	}, &quick.Config{
+		Values: func(args []reflect.Value, rand *rand.Rand) {
+			var key [KeySize]byte
+			rand.Read(key[:])
+			args[0] = reflect.ValueOf(&key)
+
+			m := make([]byte, 1+rand.Intn(1024*1024))
+			rand.Read(m)
+			args[1] = reflect.ValueOf(m)
+		},
+	}); err != nil {
+		t.Error(err)
+	}
+}

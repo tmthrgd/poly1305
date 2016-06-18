@@ -15,6 +15,7 @@ For systems with neither AVX nor AVX2, it falls back to [golang.org/x/crypto/pol
 ```
 BenchmarkXCryptoSum-8	    2000	    709006 ns/op	1478.94 MB/s	[golang.org/x/crypto/poly1305]
 BenchmarkSum-8       	    5000	    365036 ns/op	2872.53 MB/s	[tmthrgd/poly1305 - AVX only]
+BenchmarkNew-8       	    5000	    364626 ns/op	2875.76 MB/s	[tmthrgd/poly1305 - AVX only]
 BenchmarkHMACMD5-8   	    1000	   1481835 ns/op	 707.62 MB/s	[crypto/hmac crypto/md5]
 BenchmarkHMACSHA1-8  	    1000	   2253576 ns/op	 465.29 MB/s	[crypto/hmac crypto/sha1]
 BenchmarkHMACSHA256-8	     300	   5629801 ns/op	 186.25 MB/s	[crypto/hmac crypto/sha256]
