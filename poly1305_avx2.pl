@@ -1047,3 +1047,5 @@ if ($flavour =~ /^golang/) {
 
 print $code;
 close STDOUT;
+
+# -*- mode: perl;-*-
