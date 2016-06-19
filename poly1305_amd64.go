@@ -51,7 +51,9 @@ func Verify(mac *[TagSize]byte, m []byte, key *[KeySize]byte) bool {
 	return subtle.ConstantTimeCompare(tmp[:], mac[:]) == 1
 }
 
-// New returns a new Poly1305 hash using the given key.
+// New returns a new Poly1305 hash using the given key. Authenticating two
+// different messages with the same key allows an attacker to forge messages
+// at will.
 func New(key []byte) (hash.Hash, error) {
 	if len(key) != KeySize {
 		return nil, ErrInvalidKey

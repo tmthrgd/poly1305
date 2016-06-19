@@ -22,7 +22,9 @@ func Verify(mac *[TagSize]byte, m []byte, key *[KeySize]byte) bool {
 	return ref.Verify(mac, m, key)
 }
 
-// New returns a new Poly1305 hash using the given key.
+// New returns a new Poly1305 hash using the given key. Authenticating two
+// different messages with the same key allows an attacker to forge messages
+// at will.
 func New(key []byte) (hash.Hash, error) {
 	return newRef(key)
 }
