@@ -70,7 +70,7 @@ func New(key []byte) (hash.Hash, error) {
 }
 
 type avxHash struct {
-	key [KeySize]byte
+	key   [KeySize]byte
 	state poly1305_state
 
 	buffer  [128]byte
@@ -92,8 +92,8 @@ func (h *avxHash) Write(p []byte) (n int, err error) {
 	}
 
 	if len(p) >= 128 {
-		h.write(p[:len(p) & -128])
-		p = p[len(p) & -128:]
+		h.write(p[:len(p)&-128])
+		p = p[len(p)&-128:]
 	}
 
 	if len(p) != 0 {
