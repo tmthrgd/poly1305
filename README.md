@@ -8,7 +8,8 @@ An AVX/AVX2 implementation of the Poly1305 MAC for Golang.
 The AVX and AVX2 Poly1305 implementations were taken from
 [cloudflare/sslconfig](https://github.com/cloudflare/sslconfig/blob/master/patches/openssl__chacha20_poly1305_cf.patch).
 
-For systems with neither AVX nor AVX2, it falls back to [golang.org/x/crypto/poly1305](...).
+For systems with neither AVX nor AVX2, it falls back to
+[golang.org/x/crypto/poly1305](https://godoc.org/golang.org/x/crypto/poly1305).
 
 ## Benchmark
 
