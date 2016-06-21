@@ -9,6 +9,8 @@ package poly1305
 
 import ref "golang.org/x/crypto/poly1305"
 
+const useAVX, useAVX2 = false, false
+
 // Sum generates an authenticator for m using a one-time key and puts the
 // 16-byte result into out. Authenticating two different messages with the same
 // key allows an attacker to forge messages at will.
