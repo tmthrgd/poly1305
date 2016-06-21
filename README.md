@@ -3,13 +3,15 @@
 [![GoDoc](https://godoc.org/github.com/tmthrgd/poly1305?status.svg)](https://godoc.org/github.com/tmthrgd/poly1305)
 [![Build Status](https://travis-ci.org/tmthrgd/poly1305.svg?branch=master)](https://travis-ci.org/tmthrgd/poly1305)
 
-An AVX/AVX2 implementation of the Poly1305 MAC for Golang.
+An AVX/AVX2/x64 implementation of the Poly1305 MAC for Golang.
 
 The AVX and AVX2 Poly1305 implementations were taken from
 [cloudflare/sslconfig](https://github.com/cloudflare/sslconfig/blob/master/patches/openssl__chacha20_poly1305_cf.patch).
 
-For systems with neither AVX nor AVX2, it falls back to
-[golang.org/x/crypto/poly1305](https://godoc.org/golang.org/x/crypto/poly1305).
+The x64 Poly1305 implementation was taken from
+[cloudflare/sslconfig](https://github.com/cloudflare/sslconfig/blob/master/patches/openssl__chacha20_poly1305_draft_and_rfc_ossl102g.patch).
+
+For non-x64 systems, it falls back to [golang.org/x/crypto/poly1305](https://godoc.org/golang.org/x/crypto/poly1305).
 
 ## Benchmark
 

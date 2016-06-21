@@ -21,11 +21,7 @@
 // directly.
 package poly1305
 
-import (
-	"bytes"
-	"errors"
-	"hash"
-)
+import "errors"
 
 const (
 	// KeySize is the length of Poly1305 keys, in bytes.
@@ -39,65 +35,6 @@ var (
 	// ErrInvalidKey is returned when the provided key is not KeySize bytes long.
 	ErrInvalidKey = errors.New("invalid key length")
 )
-
-func newRef(key []byte) (hash.Hash, error) {
-	if len(key) != KeySize {
-		return nil, ErrInvalidKey
-	}
-
-	h := new(refHash)
-	copy(h.key[:], key)
-	return h, nil
-}
-
-type refHash struct {
-	key [KeySize]byte
-
-	buffer bytes.Buffer
-}
-
-func (h *refHash) Grow(n int) {
-	h.buffer.Grow(n)
-}
-
-func (h *refHash) GetBuffer() interface{} {
-	buf := h.buffer
-	return &buf
-}
-
-func (h *refHash) SetBuffer(buf interface{}) {
-	if buf == nil || h.buffer.Len() != 0 {
-		return
-	}
-
-	h.buffer = *buf.(*bytes.Buffer)
-	h.buffer.Reset()
-}
-
-func (h *refHash) Write(p []byte) (n int, err error) {
-	return h.buffer.Write(p)
-}
-
-func (h *refHash) Sum(b []byte) []byte {
-	var tag [TagSize]byte
-	Sum(&tag, h.buffer.Bytes(), &h.key)
-
-	ret, out := sliceForAppend(b, TagSize)
-	copy(out, tag[:])
-	return ret
-}
-
-func (h *refHash) Reset() {
-	h.buffer.Reset()
-}
-
-func (h *refHash) Size() int {
-	return TagSize
-}
-
-func (h *refHash) BlockSize() int {
-	return 16
-}
 
 // sliceForAppend takes a slice and a requested number of bytes. It returns a
 // slice with the contents of the given slice followed by that many bytes and a

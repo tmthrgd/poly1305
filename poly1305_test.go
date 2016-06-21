@@ -53,8 +53,10 @@ func TestSum(t *testing.T) {
 		t.Log("testing AVX2 implementation")
 	case useAVX:
 		t.Log("testing AVX implementation")
+	case !useRef:
+		t.Log("testing x64 implementation")
 	default:
-		t.Log("testing Go implementation")
+		t.Log("testing reference implementation")
 	}
 
 	var tag [TagSize]byte
@@ -76,7 +78,7 @@ func TestSum(t *testing.T) {
 func TestEqual(t *testing.T) {
 	t.Parallel()
 
-	if !useAVX && !useAVX2 {
+	if useRef {
 		t.Skip("skipping: using reference implementation already")
 	}
 
