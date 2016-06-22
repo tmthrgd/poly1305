@@ -182,6 +182,114 @@ func TestNewRef(t *testing.T) {
 	testNew(t)
 }
 
+func TestVerify(t *testing.T) {
+	var tag [TagSize]byte
+	m := []byte("test")
+
+	var key [KeySize]byte
+	copy(key[:], "this is 32-byte key for Poly1305")
+
+	Sum(&tag, m, &key)
+
+	if !Verify(&tag, m, &key) {
+		t.Error("expected Verify to succeed")
+	}
+}
+
+func testVerifyCorrupt(t *testing.T, corruptor func(tag *[TagSize]byte, m []byte, key *[KeySize]byte)) {
+	var tag [TagSize]byte
+	m := []byte("test")
+
+	var key [KeySize]byte
+	copy(key[:], "this is 32-byte key for Poly1305")
+
+	Sum(&tag, m, &key)
+
+	corruptor(&tag, m, &key)
+
+	if Verify(&tag, m, &key) {
+		t.Error("expected Verify to failed")
+	}
+}
+
+func TestVerifyCorruptTag(t *testing.T) {
+	testVerifyCorrupt(t, func(tag *[TagSize]byte, m []byte, key *[KeySize]byte) {
+		tag[0] ^= 1
+	})
+}
+
+func TestVerifyCorruptMessage(t *testing.T) {
+	testVerifyCorrupt(t, func(tag *[TagSize]byte, m []byte, key *[KeySize]byte) {
+		m[0] ^= 1
+	})
+}
+
+func TestVerifyCorruptKey(t *testing.T) {
+	testVerifyCorrupt(t, func(tag *[TagSize]byte, m []byte, key *[KeySize]byte) {
+		key[0] ^= 1
+	})
+}
+
+func TestNewInvalidKeySize(t *testing.T) {
+	var key [KeySize - 2]byte
+
+	_, err := New(key[:])
+	if err != ErrInvalidKey {
+		t.Errorf("Expected %v error but was %v", ErrInvalidKey, err)
+	}
+}
+
+func TestHashSize(t *testing.T) {
+	var key [KeySize]byte
+
+	h, err := New(key[:])
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if h.Size() != TagSize {
+		t.Errorf("Size returned wrong value, expected %d, got %d", TagSize, h.Size())
+	}
+}
+
+func TestBlockSize(t *testing.T) {
+	var key [KeySize]byte
+
+	h, err := New(key[:])
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	switch h.BlockSize() {
+	case 128, 16:
+	default:
+		t.Errorf("BlockSize returned wrong value, expected 128 or 16, got %d", h.BlockSize())
+	}
+}
+
+func TestHashDoubleSum(t *testing.T) {
+	var key [KeySize]byte
+	copy(key[:], "this is 32-byte key for Poly1305")
+
+	h, err := New(key[:])
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	h.Write([]byte("test"))
+	h.Sum(nil)
+
+	h.Write([]byte("test"))
+	tag := h.Sum(nil)
+
+	var tag2 [TagSize]byte
+	Sum(&tag2, []byte("testtest"), &key)
+
+	if !bytes.Equal(tag, tag2[:]) {
+		t.Errorf("expected %x, got %x", tag2, tag)
+	}
+}
+
 func TestEqual(t *testing.T) {
 	t.Parallel()
 
