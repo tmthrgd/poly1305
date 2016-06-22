@@ -729,7 +729,7 @@ TEXT ·poly1305_finish_avx(SB),\$0-16
 	movq state+0(FP), DI
 	movq mac+8(FP), SI
 
-	movq \$LandMask<>(SB), R15
+	movq \$LandMask<>(SB), R12
 
 ___
 } else {

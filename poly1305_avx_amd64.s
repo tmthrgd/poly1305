@@ -922,7 +922,7 @@ TEXT ·poly1305_finish_avx(SB),$0-16
 	MOVQ	state+0(FP),DI
 	MOVQ	mac+8(FP),SI
 
-	MOVQ	$LandMask<>(SB),R15
+	MOVQ	$LandMask<>(SB),R12
 
 	VZEROUPPER
 	// VMOVD	160(DI),X0

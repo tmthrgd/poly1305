@@ -1268,7 +1268,7 @@ TEXT ·poly1305_finish_avx2(SB),$0-16
 	MOVQ	state+0(FP),DI
 	MOVQ	mac+8(FP),SI
 
-	MOVQ	$LandMask<>(SB),R15
+	MOVQ	$LandMask<>(SB),R12
 
 	// VMOVD	304(DI),X0
 	BYTE $0xc5; BYTE $0xf9; BYTE $0x6e; BYTE $0x87; BYTE $0x30; BYTE $0x01; BYTE $0x00
