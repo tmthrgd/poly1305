@@ -112,6 +112,76 @@ func TestSumRef(t *testing.T) {
 	testSum(t)
 }
 
+func testNew(t *testing.T) {
+	for i, vector := range testData {
+		t.Logf("Running test vector %d", i)
+
+		h, err := New(vector.k)
+		if err != nil {
+			t.Error(err)
+		}
+
+		h.Write(vector.in[:1])
+		h.Write(vector.in[1:])
+
+		tag := h.Sum(nil)
+
+		if !bytes.Equal(tag, vector.correct) {
+			t.Errorf("%d: expected %x, got %x", i, vector.correct, tag)
+		}
+	}
+}
+
+func TestNewx64(t *testing.T) {
+	if useRef {
+		t.Skip("skipping: do not have x64 implementation")
+	}
+
+	oldAVX, oldAVX2 := useAVX, useAVX2
+	useAVX, useAVX2 = false, false
+	defer func() {
+		useAVX, useAVX2 = oldAVX, oldAVX2
+	}()
+
+	testNew(t)
+}
+
+func TestNewAVX(t *testing.T) {
+	if !useAVX {
+		t.Skip("skipping: do not have AVX implementation")
+	}
+
+	oldAVX, oldAVX2 := useAVX, useAVX2
+	useAVX, useAVX2 = true, false
+	defer func() {
+		useAVX, useAVX2 = oldAVX, oldAVX2
+	}()
+
+	testNew(t)
+}
+
+func TestNewAVX2(t *testing.T) {
+	if !useAVX2 {
+		t.Skip("skipping: do not have AVX2 implementation")
+	}
+
+	oldAVX, oldAVX2 := useAVX, useAVX2
+	useAVX, useAVX2 = false, true
+	defer func() {
+		useAVX, useAVX2 = oldAVX, oldAVX2
+	}()
+
+	testNew(t)
+}
+
+func TestNewRef(t *testing.T) {
+	if !useRef {
+		t.Skip("skipping: not using reference implementation")
+	}
+
+	testNew(t)
+}
+
 func TestEqual(t *testing.T) {
 	t.Parallel()
 
