@@ -45,20 +45,7 @@ var testData = []struct {
 	},
 }
 
-func TestSum(t *testing.T) {
-	t.Parallel()
-
-	switch {
-	case useAVX2:
-		t.Log("testing AVX2 implementation")
-	case useAVX:
-		t.Log("testing AVX implementation")
-	case !useRef:
-		t.Log("testing x64 implementation")
-	default:
-		t.Log("testing reference implementation")
-	}
-
+func testSum(t *testing.T) {
 	var tag [TagSize]byte
 	var key [KeySize]byte
 
@@ -73,6 +60,56 @@ func TestSum(t *testing.T) {
 			t.Errorf("%d: expected %x, got %x", i, vector.correct, tag[:])
 		}
 	}
+}
+
+func TestSumx64(t *testing.T) {
+	if useRef {
+		t.Skip("skipping: do not have x64 implementation")
+	}
+
+	oldAVX, oldAVX2 := useAVX, useAVX2
+	useAVX, useAVX2 = false, false
+	defer func() {
+		useAVX, useAVX2 = oldAVX, oldAVX2
+	}()
+
+	testSum(t)
+}
+
+func TestSumAVX(t *testing.T) {
+	if !useAVX {
+		t.Skip("skipping: do not have AVX implementation")
+	}
+
+	oldAVX, oldAVX2 := useAVX, useAVX2
+	useAVX, useAVX2 = true, false
+	defer func() {
+		useAVX, useAVX2 = oldAVX, oldAVX2
+	}()
+
+	testSum(t)
+}
+
+func TestSumAVX2(t *testing.T) {
+	if !useAVX2 {
+		t.Skip("skipping: do not have AVX2 implementation")
+	}
+
+	oldAVX, oldAVX2 := useAVX, useAVX2
+	useAVX, useAVX2 = false, true
+	defer func() {
+		useAVX, useAVX2 = oldAVX, oldAVX2
+	}()
+
+	testSum(t)
+}
+
+func TestSumRef(t *testing.T) {
+	if !useRef {
+		t.Skip("skipping: not using reference implementation")
+	}
+
+	testSum(t)
 }
 
 func TestEqual(t *testing.T) {

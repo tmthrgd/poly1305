@@ -14,7 +14,9 @@ import (
 	ref "golang.org/x/crypto/poly1305"
 )
 
-const useRef, useAVX, useAVX2 = true, false, false
+const useRef = true
+
+var useAVX, useAVX2 = false, false
 
 // Sum generates an authenticator for m using a one-time key and puts the
 // 16-byte result into out. Authenticating two different messages with the same
