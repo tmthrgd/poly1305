@@ -39,8 +39,8 @@ func benchmarkHash(b *testing.B, h hash.Hash, l int) {
 		h.Reset()
 
 		h.Write(m[:l/4])
-		h.Write(m[l/4:l/2])
-		h.Write(m[l/2:3*l/4])
+		h.Write(m[l/4 : l/2])
+		h.Write(m[l/2 : 3*l/4])
 		h.Write(m[3*l/4:])
 		h.Sum(tag)
 	}
