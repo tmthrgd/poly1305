@@ -16,12 +16,14 @@ For non-x64 systems, it falls back to [golang.org/x/crypto/poly1305](https://god
 ## Benchmark
 
 ```
-BenchmarkXCryptoSum-8	    2000	    709006 ns/op	1478.94 MB/s	[golang.org/x/crypto/poly1305]
-BenchmarkSum-8       	    5000	    365036 ns/op	2872.53 MB/s	[tmthrgd/poly1305 - AVX only]
-BenchmarkNew-8       	    5000	    364626 ns/op	2875.76 MB/s	[tmthrgd/poly1305 - AVX only]
-BenchmarkHMACMD5-8   	    1000	   1481835 ns/op	 707.62 MB/s	[crypto/hmac crypto/md5]
-BenchmarkHMACSHA1-8  	    1000	   2253576 ns/op	 465.29 MB/s	[crypto/hmac crypto/sha1]
-BenchmarkHMACSHA256-8	     300	   5629801 ns/op	 186.25 MB/s	[crypto/hmac crypto/sha256]
+BenchmarkXCryptoSum_1M-8   	    2000	    709006 ns/op	1478.94 MB/s	[golang.org/x/crypto/poly1305]
+BenchmarkSumx64_1M-8       	    3000	    419194 ns/op	2501.41 MB/s	[tmthrgd/poly1305]
+BenchmarkSumAVX_1M-8       	    5000	    364872 ns/op	2873.82 MB/s	[tmthrgd/poly1305]
+BenchmarkNewx64_1M-8       	    3000	    424440 ns/op	2470.49 MB/s	[tmthrgd/poly1305]
+BenchmarkNewAVX_1M-8       	    5000	    364626 ns/op	2875.76 MB/s	[tmthrgd/poly1305]
+BenchmarkHMAC_MD5_1M-8     	    1000	   1481835 ns/op	 707.62 MB/s	[crypto/hmac crypto/md5]
+BenchmarkHMAC_SHA1_1M-8    	    1000	   2253576 ns/op	 465.29 MB/s	[crypto/hmac crypto/sha1]
+BenchmarkHMAC_SHA256_1M-8  	     300	   5617349 ns/op	 186.67 MB/s	[crypto/hmac crypto/sha256]
 ```
 
 ## License
