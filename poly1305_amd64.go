@@ -144,8 +144,9 @@ func (h *poly1305Hash) sum(b []byte) []byte {
 }
 
 func (h *poly1305Hash) Reset() {
-	for i := 0; i < h.bufUsed; i++ {
-		h.buffer[i] = 0
+	b := h.buffer[:h.bufUsed]
+	for i := range b {
+		b[i] = 0
 	}
 
 	h.bufUsed = 0
