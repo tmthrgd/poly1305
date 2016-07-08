@@ -128,7 +128,7 @@ my ($state, $inp)
    =("%rdi", "%rsi");
 
 my ($acc0, $acc1, $acc2, $inl, $t0, $t1, $t2, $t3, $r0)
-   =("%rcx", "%r8", "%r9", "%r10", "%r11", "%r12", "%r13", "%r14", "%r15");
+   =("%rbx", "%r8", "%r9", "%r10", "%r11", "%r12", "%r13", "%r14", "%r15");
 
 my ($r1)
    =("8*4($state)");
@@ -298,7 +298,7 @@ ___
 my ($mac, $state)=("%rsi", "%rdi");
 
 my ($acc0, $acc1, $acc2, $t0, $t1, $t2)
-   =("%rcx", "%rax", "%rdx", "%r8", "%r9", "%r10");
+   =("%rbx", "%rax", "%rdx", "%r8", "%r9", "%r10");
 
 if ($flavour =~ /^golang/) {
     $code.=<<___;

@@ -442,7 +442,7 @@ my ($A0_x, $A1_x, $A2_x, $A3_x, $A4_x,
     $T0_x, $T1_x, $R0_x, $R1_x, $R2_x,
     $R3_x, $R4_x, $AND_MASK_x, $PERM_MASK_x, $SET_MASK_x)=map("%xmm$_",(0..14));
 
-my ($state, $in, $in_len, $hlp, $rsp_save)=("%rdi", "%rsi", "%rdx", "%rcx", "%rax");
+my ($state, $in, $in_len, $hlp, $rsp_save)=("%rdi", "%rsi", "%rdx", "%rbx", "%rax");
 
 if ($flavour =~ /^golang/) {
     $code.=<<___;
