@@ -14,7 +14,8 @@ import (
 
 const useRef = false
 
-var useAVX, useAVX2 = hasAVX()
+var useAVX, _ = hasAVX()
+var useAVX2 = false
 
 type poly1305_state [512]byte
 
