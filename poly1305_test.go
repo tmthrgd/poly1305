@@ -11,6 +11,7 @@ package poly1305
 
 import (
 	"bytes"
+	"fmt"
 	"math/rand"
 	"reflect"
 	"testing"
@@ -50,15 +51,15 @@ func testSum(t *testing.T) {
 	var key [KeySize]byte
 
 	for i, vector := range testData {
-		t.Logf("Running test vector %d", i)
+		t.Run(fmt.Sprintf("vector%d", i), func(t *testing.T) {
+			copy(key[:], vector.k)
 
-		copy(key[:], vector.k)
+			Sum(&tag, vector.in, &key)
 
-		Sum(&tag, vector.in, &key)
-
-		if !bytes.Equal(tag[:], vector.correct) {
-			t.Errorf("%d: expected %x, got %x", i, vector.correct, tag[:])
-		}
+			if !bytes.Equal(tag[:], vector.correct) {
+				t.Errorf("%d: expected %x, got %x", i, vector.correct, tag[:])
+			}
+		})
 	}
 }
 
@@ -114,21 +115,21 @@ func TestSumRef(t *testing.T) {
 
 func testNew(t *testing.T) {
 	for i, vector := range testData {
-		t.Logf("Running test vector %d", i)
+		t.Run(fmt.Sprintf("vector%d", i), func(t *testing.T) {
+			h, err := New(vector.k)
+			if err != nil {
+				t.Fatal(err)
+			}
 
-		h, err := New(vector.k)
-		if err != nil {
-			t.Error(err)
-		}
+			h.Write(vector.in[:1])
+			h.Write(vector.in[1:])
 
-		h.Write(vector.in[:1])
-		h.Write(vector.in[1:])
+			tag := h.Sum(nil)
 
-		tag := h.Sum(nil)
-
-		if !bytes.Equal(tag, vector.correct) {
-			t.Errorf("%d: expected %x, got %x", i, vector.correct, tag)
-		}
+			if !bytes.Equal(tag, vector.correct) {
+				t.Errorf("%d: expected %x, got %x", i, vector.correct, tag)
+			}
+		})
 	}
 }
 
