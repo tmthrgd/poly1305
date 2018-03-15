@@ -16,7 +16,7 @@ For non-x64 systems, it falls back to [golang.org/x/crypto/poly1305](https://god
 ## Benchmark
 
 ```
-BenchmarkXCryptoSum/1M-8   	    2000	    709006 ns/op	1478.94 MB/s	[golang.org/x/crypto/poly1305]
+BenchmarkXCryptoSum/1M-8   	    3000	    404575 ns/op	2591.79 MB/s	[golang.org/x/crypto/poly1305]
 BenchmarkSumx64/1M-8       	    3000	    419194 ns/op	2501.41 MB/s	[tmthrgd/poly1305]
 BenchmarkSumAVX/1M-8       	    5000	    364872 ns/op	2873.82 MB/s	[tmthrgd/poly1305]
 BenchmarkNewx64/1M-8       	    3000	    424440 ns/op	2470.49 MB/s	[tmthrgd/poly1305]
